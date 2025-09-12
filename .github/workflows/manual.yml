@@ -35,6 +35,12 @@ jobs:
           mv Left4DHooks/sourcemod/scripting/include/*.inc sourcemod/scripting/include
           rm -rf Left4DHooks
 
+      - name: Get SendProxy
+        run: |
+          git clone https://github.com/szGabu/Left4SendProxy.git
+          mv Left4SendProxy/addons/sourcemod/scripting/include/*.inc sourcemod/scripting/include
+          rm -rf Left4SendProxy
+
       - name: Copy files to Scripting Directory
         run: |
           cp -R scripting/* sourcemod/scripting/
