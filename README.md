@@ -1,6 +1,8 @@
 # [L4D2] HUD Display Manager
 *Author: gabuch2*
-*Version: 1.0.1*
+
+*Version: 1.0.2*
+
 *Plugin for Left 4 Dead 2 that manages HUD display to show nearest teammates instead of campaign default actors.*
 
 Left 4 Dead 2 has a hard limit of how many players can display in the HUD at the same time. The real hard limit is 4 (not counting you) but this is rather buggy and will always show the first actors of the campaign. This plugin manipulates the data sent to the clients, displaying the nearest 3 teammates instead.
