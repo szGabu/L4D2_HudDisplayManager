@@ -9,7 +9,7 @@
 #define DEBUG 						false
 #define PER_PLAYER_OPTIONAL 		false
 
-#define HUD_MANUAL_RESET_COOLDOWN	120
+#define HUD_MANUAL_RESET_COOLDOWN	60
 
 #define MAX_HUD_PLAYERS 			4
 
