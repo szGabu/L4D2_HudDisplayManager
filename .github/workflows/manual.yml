@@ -1,0 +1,97 @@
+name: Manual Build
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Project
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Download and Extract Sourcemod
+        run: |
+          wget https://sm.alliedmods.net/smdrop/1.12/sourcemod-1.12.0-git7169-linux.tar.gz -O base.tar.gz
+          tar -xzf base.tar.gz -C . --strip-components=1
+          rm base.tar.gz
+
+      - name: Verify extracted contents
+        run: |
+          echo "Contents of current directory:"
+          tree .
+
+      - name: Clean existing files (we dont need them)
+        run: |
+          rm -rf metamod
+          rm sourcemod/scripting/*.sp
+
+      - name: Get Left4dhooks
+        run: |
+          git clone https://github.com/SilvDev/Left4DHooks.git
+          mkdir sourcemod/scripting/l4dd
+          mv Left4DHooks/sourcemod/scripting/l4dd/*.sp sourcemod/scripting/l4dd
+          mv Left4DHooks/sourcemod/scripting/include/*.inc sourcemod/scripting/include
+          rm -rf Left4DHooks
+
+      - name: Copy files to Scripting Directory
+        run: |
+          cp -R scripting/* sourcemod/scripting/
+  
+      - name: Verify Setup
+        run: |
+          echo "Contents of sourcmeod scripting directory:"
+          tree sourcemod/scripting
+
+      - name: Compile Repository Plugins
+        run: |
+          cd sourcemod/scripting
+          ./compile.sh
+
+      - name: Compile Repository Plugins
+        run: |
+          mkdir plugins
+          cp sourcemod/scripting/compiled/*.smx plugins
+          rm -rf sourcemod
+
+      - name: Upload Compiled Scripts as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{github.event.repository.name}}-compiled
+          path: .
+
+  release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{github.event.repository.name}}-compiled
+          path: .
+
+      - name: Verify downloaded artifact  contents
+        run: |
+          echo "Contents of directory:"
+          tree .
+
+      - name: ZIP Contents
+        run: |
+          zip -r ${{github.event.repository.name}}.zip ./
+
+      - name: Get latest tag
+        id: tag
+        run: |
+          echo "TAG=$(curl -s https://api.github.com/repos/${{ github.repository }}/tags | jq -r '.[0].name')" >> $GITHUB_ENV
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ env.TAG }}
+          files: ${{github.event.repository.name}}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
