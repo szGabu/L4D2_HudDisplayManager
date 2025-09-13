@@ -3,7 +3,7 @@
 #define PLUGIN_NAME 				"HUD Player Display Manager"
 #define PLUGIN_AUTHOR 				"gabuch2"
 #define PLUGIN_DESCRIPTION 			"If there are more than 4 survivors on the team, only show the nearest 3 in the HUD."
-#define PLUGIN_VERSION 				"1.0.2"
+#define PLUGIN_VERSION 				"1.0.3"
 #define PLUGIN_URL					"https://github.com/szGabu/L4D2_HudDisplayManager"
 
 #define DEBUG 						false
@@ -47,6 +47,8 @@ bool 	g_bHudManagerActive;
 float 	g_fLastHudReset;
 
 bool 	g_bExtendedScoreboardLoaded = false;
+
+bool 	g_isFirstLoad = true;
 
 Handle	g_hTimer;
 
@@ -135,12 +137,13 @@ public void OnPluginEnd()
 
 public void OnMapEnd()
 {
+	g_isFirstLoad = false;
 	DisableManager();
 }
 
 public void OnMapStart()
 {
-	if(g_bHardReloadMapStart)
+	if(g_bHardReloadMapStart && !g_isFirstLoad)
 		HardReload();
 }
 
