@@ -50,12 +50,14 @@ Left 4 Dead 2 has a hard limit of how many players can display in the HUD at the
     - Required flag: Kick
 
 ## Changelog
+- **1.0.3**
+  - Fix invinite reloading at map start 
 - **1.0.2**
   - Added more unhook/rehook instances, aiming to fix dissapearing HUD bug
   - Added sm_l4d2_hud_display_hard_reload_map_start, when enabled it will hard reload the plugin. It's overkill but I haven't been able to find the root cause of this bug
   - Added admin command **sm_resethud**, manually hard reloads the plugin, it will lag the server for like a second, only usable every 60 seconds. Requires the Kick flag
   - Added ConVar **sm_l4d2_hud_display_display_fourth**, it will make the plugin use the otherwise unused fourth survivor slot. This is quite buggy, as it was not intended in the base game. Custom survivors outside the base game won't refresh their portraits and will instead display the last character in their position
-  - Added support for Extended Scoreboard (Unreleased at the time of writing this) to avoid possible conflicts.
+  - Added support for Extended Scoreboard (Unreleased at the time of writing this) to avoid possible conflicts
 - **1.0.1**
   - Better checks to avoid possible errors when unhooking players and map ending
   - Included an alternative compile option to give support to SendProxy includes with an optional per_player parameter
